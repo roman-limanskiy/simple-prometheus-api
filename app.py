@@ -20,13 +20,13 @@ def main():
         for key in request_data.keys():
 
                 if request_data[key]['action'] == 'create':
-                        alert_rule = { 'groups': [ { 'name': 'alert.rules', 'rules': [ { 'alert': 'InstanceDown', 'expr': 'probe_success{wifi_device_id = "' + request_data[key]['wifi_device_id'] + '"} == 0', 'for': request_data[key]['pending_time'] + 's' } ] } ] }
+                        alert_rule = { 'groups': [ { 'name': 'alert.rules', 'rules': [ { 'alert': 'InstanceDown', 'expr': 'probe_success{instance = "' + key + '"} == 0', 'for': request_data[key]['pending_time'] + 's' } ] } ] }
                         with open( workdir + key + '.yaml', 'w') as outfile:
                                 yaml.dump( alert_rule, outfile )
                         result[key] = 'created'
 
                 elif request_data[key]['action'] == 'update':
-                        alert_rule = { 'groups': { 'name': 'alert.rules', 'rules': { 'alert': 'InstanceDown', 'expr': 'probe_success{wifi_device_id = "' + request_data[key]['wifi_device_id'] + '"} == 0', 'for': request_data[key]['pending_time'] + 's' } } }
+                        alert_rule = { 'groups': { 'name': 'alert.rules', 'rules': { 'alert': 'InstanceDown', 'expr': 'probe_success{instance = "' + key + '"} == 0', 'for': request_data[key]['pending_time'] + 's' } } }
                         with open( workdir + key + '.yaml', 'w') as outfile:
                                 yaml.dump( alert_rule, outfile )
                         result[key] = 'updated'
@@ -41,4 +41,4 @@ def main():
         return result
 
 if __name__ == "__main__":
-        app.run(host='10.101.15.224', port=9095)
+        app.run(host='0.0.0.0', port=9095)
